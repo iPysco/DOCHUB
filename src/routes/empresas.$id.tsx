@@ -1,5 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import {
   AlertTriangle,
   ArrowLeft,
@@ -24,7 +24,7 @@ import {
 import type { StatusDocView } from "@/lib/types";
 
 export const Route = createFileRoute("/empresas/$id")({
-  head: () => ({ meta: [{ title: "Empresa | ContaDocs" }] }),
+  head: () => ({ meta: [{ title: "Empresa | DocHub" }] }),
   component: EmpresaDetail,
   notFoundComponent: () => (
     <AppLayout>
@@ -62,6 +62,19 @@ function EmpresaDetail() {
   const [mes, setMes] = useState(inicio.mes);
   const [editOpen, setEditOpen] = useState(false);
   const [cobrancaOpen, setCobrancaOpen] = useState(false);
+  const [bloqToast, setBloqToast] = useState(false);
+  const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const isMesBloqueado = (mesIdx: number) => {
+    if (!empresa?.clienteDesde) return false;
+    return ano < inicio.ano || (ano === inicio.ano && mesIdx < inicio.mes);
+  };
+
+  const mostrarToastBloqueio = () => {
+    if (toastTimer.current) clearTimeout(toastTimer.current);
+    setBloqToast(true);
+    toastTimer.current = setTimeout(() => setBloqToast(false), 5000);
+  };
   const [anexoAlvo, setAnexoAlvo] = useState<{
     tipoId: string;
     tipoNome: string;
@@ -263,19 +276,25 @@ function EmpresaDetail() {
 
         <div className="flex items-center justify-between gap-4 flex-wrap">
           <div className="flex items-center gap-1 bg-card border border-border rounded-lg p-1 overflow-x-auto">
-            {MESES.map((m, i) => (
-              <button
-                key={m}
-                onClick={() => setMes(i)}
-                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
-                  mes === i
-                    ? "bg-primary text-primary-foreground"
-                    : "text-muted-foreground hover:bg-muted"
-                }`}
-              >
-                {m}
-              </button>
-            ))}
+            {MESES.map((m, i) => {
+              const bloqueado = isMesBloqueado(i);
+              return (
+                <button
+                  key={m}
+                  onClick={() => bloqueado ? mostrarToastBloqueio() : setMes(i)}
+                  disabled={false}
+                  className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                    bloqueado
+                      ? "opacity-40 cursor-not-allowed text-muted-foreground"
+                      : mes === i
+                        ? "bg-primary text-primary-foreground"
+                        : "text-muted-foreground hover:bg-muted"
+                  }`}
+                >
+                  {m}
+                </button>
+              );
+            })}
             <select
               value={ano}
               onChange={(e) => setAno(Number(e.target.value))}
@@ -414,6 +433,15 @@ function EmpresaDetail() {
             />
           );
         })()}
+
+      {bloqToast && (
+        <div
+          className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-lg text-white text-sm font-medium shadow-lg"
+          style={{ backgroundColor: "oklch(0.32 0.14 15)" }}
+        >
+          Acesso bloqueado, empresa cadastrada após essa data, verificar no cadastro de empresas.
+        </div>
+      )}
 
       {cobrancaOpen && (
         <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm grid place-items-center p-4">

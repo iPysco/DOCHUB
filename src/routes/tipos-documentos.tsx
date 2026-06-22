@@ -7,7 +7,7 @@ import type { Recorrencia } from "@/lib/types";
 
 export const Route = createFileRoute("/tipos-documentos")({
   head: () => ({
-    meta: [{ title: "Tipos de Documentos | ContaDocs" }],
+    meta: [{ title: "Tipos de Documentos | DocHub" }],
   }),
   component: TiposPage,
 });

@@ -5,7 +5,7 @@ import { AppLayout, PageHeader } from "@/components/AppLayout";
 import { useStore } from "@/lib/store";
 
 export const Route = createFileRoute("/analistas")({
-  head: () => ({ meta: [{ title: "Analistas | ContaDocs" }] }),
+  head: () => ({ meta: [{ title: "Analistas | DocHub" }] }),
   component: AnalistasPage,
 });
 

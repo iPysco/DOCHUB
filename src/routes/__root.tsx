@@ -77,9 +77,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "ContaDocs — Gestão de documentos contábeis" },
+      { title: "DocHub — Gestão de documentos contábeis" },
       { name: "description", content: "Sistema de gestão de documentos contábeis para escritórios." },
-      { property: "og:title", content: "ContaDocs" },
+      { property: "og:title", content: "DocHub" },
       { property: "og:description", content: "Gestão de documentos contábeis para escritórios." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -96,7 +96,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Libre+Franklin:wght@500;600;700;800&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Open+Sans:wght@400;500;600;700&display=swap",
       },
       {
         rel: "stylesheet",

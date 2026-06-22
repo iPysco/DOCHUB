@@ -3,6 +3,7 @@ interface Props {
   value: number;
   total: number;
   tone: "pending" | "overdue" | "received" | "validated";
+  empresaCount?: number;
 }
 
 const toneColor: Record<Props["tone"], string> = {
@@ -19,7 +20,7 @@ const toneBg: Record<Props["tone"], string> = {
   validated: "var(--color-validated-soft)",
 };
 
-export function CircularStat({ label, value, total, tone }: Props) {
+export function CircularStat({ label, value, total, tone, empresaCount }: Props) {
   const pct = total === 0 ? 0 : Math.round((value / total) * 100);
   const r = 52;
   const c = 2 * Math.PI * r;
@@ -59,12 +60,15 @@ export function CircularStat({ label, value, total, tone }: Props) {
           <div className="text-2xl font-bold" style={{ color }}>
             {pct}%
           </div>
-          <div className="text-xs text-foreground/70">
-            {value}/{total}
-          </div>
         </div>
       </div>
       <div className="text-sm font-medium text-foreground">{label}</div>
+      {empresaCount !== undefined && (
+        <div className="text-xs text-foreground/70 text-center leading-relaxed">
+          <div>Qntd. Empresas: <span className="font-semibold">{empresaCount}</span></div>
+          <div>Qntd. Documentos: <span className="font-semibold">{value}</span></div>
+        </div>
+      )}
     </div>
   );
 }

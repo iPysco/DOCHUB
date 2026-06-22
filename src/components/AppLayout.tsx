@@ -30,7 +30,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
               C
             </div>
             <div>
-              <div className="font-semibold leading-tight">ContaDocs</div>
+              <div className="font-semibold leading-tight">DocHub</div>
               <div className="text-xs text-muted-foreground">Gestão contábil</div>
             </div>
           </div>
@@ -91,10 +91,10 @@ export function PageHeader({
   actions?: ReactNode;
 }) {
   return (
-    <div className="border-b border-border bg-card">
-      <div className="px-8 py-6 flex items-center justify-between gap-4">
+    <div className="border-b border-border" style={{ backgroundColor: "oklch(0.95 0.03 80)" }}>
+      <div className="px-8 py-3 flex items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
+          <h1 className="text-xl font-semibold tracking-tight" style={{ color: "oklch(0.22 0.14 255)" }}>{title}</h1>
           {description && (
             <p className="text-sm text-muted-foreground mt-1">{description}</p>
           )}

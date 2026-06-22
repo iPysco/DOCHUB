@@ -20,7 +20,7 @@ import type {
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Painel | ContaDocs" },
+      { title: "Painel | DocHub" },
       {
         name: "description",
         content: "Painel de gestão de documentos contábeis.",
@@ -219,24 +219,27 @@ function Painel() {
             value={stats.pendente}
             total={stats.totalDocs}
             tone="pending"
+            empresaCount={empresasComPendente.length}
           />
           <CircularStat
             label="Atrasado"
             value={stats.atrasado}
             total={stats.totalDocs}
             tone="overdue"
+            empresaCount={empresasComAtraso.length}
           />
           <CircularStat
             label="Dispensado"
             value={stats.dispensado}
             total={stats.totalDocs}
             tone="validated"
+            empresaCount={dispensadosFiltrados.length}
           />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <KanbanColumn
-            title="Em atraso"
+            title="EM ATRASO"
             countTone="overdue"
             empty="Nenhuma empresa com documentos em atraso."
             items={empresasComAtraso}
@@ -257,7 +260,7 @@ function Painel() {
             }
           />
           <KanbanColumn
-            title="Pendente"
+            title="PENDENTE"
             countTone="pending"
             empty="Nenhum documento pendente no período."
             items={empresasComPendente}
@@ -506,7 +509,7 @@ function DispensadoColumn({
             className="inline-block size-2.5 rounded-full"
             style={{ backgroundColor: "var(--color-validated)" }}
           />
-          Dispensado
+          DISPENSADO
         </h2>
         <div className="flex items-center gap-2">
           <select

@@ -7,7 +7,7 @@ import { useStore } from "@/lib/store";
 import type { Canal, Classificacao } from "@/lib/types";
 
 export const Route = createFileRoute("/empresas/")({
-  head: () => ({ meta: [{ title: "Empresas | ContaDocs" }] }),
+  head: () => ({ meta: [{ title: "Empresas | DocHub" }] }),
   component: EmpresasList,
 });
 
