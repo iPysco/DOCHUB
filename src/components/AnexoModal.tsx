@@ -28,11 +28,43 @@ export function AnexoModal({
   const [anexo, setAnexo] = useState<AnexoDoc | undefined>(anexoAtual);
   const [erro, setErro] = useState<string | null>(null);
 
+  const validarExtrato = async (f: File): Promise<string | null> => {
+    const ext = f.name.split(".").pop()?.toLowerCase();
+    if (!["pdf", "ofx", "csv"].includes(ext ?? ""))
+      return "Formato inválido. Envie um arquivo .pdf, .ofx ou .csv.";
+
+    const head = await new Promise<string>((res) => {
+      const r = new FileReader();
+      r.onload = () => res(r.result as string);
+      r.readAsText(f.slice(0, 512));
+    });
+
+    if (ext === "pdf") {
+      if (!head.startsWith("%PDF"))
+        return "O arquivo PDF parece inválido ou corrompido.";
+    } else if (ext === "ofx") {
+      if (!head.includes("OFXHEADER") && !head.includes("<OFX") && !head.includes("<?OFX"))
+        return "O arquivo OFX não parece ser um extrato bancário válido.";
+    } else if (ext === "csv") {
+      const primeiraLinha = head.split(/\r?\n/)[0].toLowerCase();
+      const palavrasChave = ["data", "valor", "descri", "histor", "lançam", "saldo", "credito", "debito", "crédito", "débito", "date", "amount", "balance"];
+      if (!palavrasChave.some((p) => primeiraLinha.includes(p)))
+        return "O CSV não parece ser um extrato bancário. Verifique se o arquivo está correto.";
+    }
+    return null;
+  };
+
   const onFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0];
     if (!f) return;
     if (f.size > 5 * 1024 * 1024) {
       setErro("Arquivo muito grande (máx. 5 MB).");
+      return;
+    }
+    const erroValidacao = await validarExtrato(f);
+    if (erroValidacao) {
+      setErro(erroValidacao);
+      e.target.value = "";
       return;
     }
     setErro(null);
