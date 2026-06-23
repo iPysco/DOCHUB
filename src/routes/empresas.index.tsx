@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useRef, useState } from "react";
 import { Pencil, Plus, Search, Trash2, Upload } from "lucide-react";
 import { AppLayout, PageHeader } from "@/components/AppLayout";
+import { ConfirmModal } from "@/components/ConfirmModal";
 import { EmpresaModal } from "@/components/EmpresaModal";
 import { useStore } from "@/lib/store";
 import type { Canal, Classificacao } from "@/lib/types";
@@ -24,6 +25,7 @@ function EmpresasList() {
 
   const [open, setOpen] = useState(false);
   const [editEmpresa, setEditEmpresa] = useState<typeof empresas[0] | null>(null);
+  const [deleteEmpresa, setDeleteEmpresa] = useState<typeof empresas[0] | null>(null);
   const [q, setQ] = useState("");
 
   const handleCsv = async (file: File) => {
@@ -252,9 +254,7 @@ function EmpresasList() {
                             <Pencil className="size-4" />
                           </button>
                           <button
-                            onClick={() => {
-                              if (confirm(`Excluir "${e.nome}"?`)) removeEmpresa(e.id);
-                            }}
+                            onClick={() => setDeleteEmpresa(e)}
                             className="text-muted-foreground hover:text-destructive"
                             title="Excluir empresa"
                           >
@@ -294,6 +294,16 @@ function EmpresasList() {
           }}
           analistas={analistas}
           tipos={tipos}
+        />
+      )}
+
+      {deleteEmpresa && (
+        <ConfirmModal
+          title="Excluir empresa"
+          message={`Tem certeza que deseja excluir "${deleteEmpresa.nome}"? Esta ação não pode ser desfeita.`}
+          confirmLabel="Excluir"
+          onConfirm={() => removeEmpresa(deleteEmpresa.id)}
+          onClose={() => setDeleteEmpresa(null)}
         />
       )}
     </AppLayout>

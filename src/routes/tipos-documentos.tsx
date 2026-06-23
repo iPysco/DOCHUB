@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Trash2, Plus, Pencil, X } from "lucide-react";
 import { AppLayout, PageHeader } from "@/components/AppLayout";
+import { ConfirmModal } from "@/components/ConfirmModal";
 import { useStore } from "@/lib/store";
 import type { Recorrencia } from "@/lib/types";
 
@@ -26,6 +27,7 @@ function TiposPage() {
   const removeTipo = useStore((s) => s.removeTipo);
 
   const [editId, setEditId] = useState<string | null>(null);
+  const [deleteTipoAlvo, setDeleteTipoAlvo] = useState<{ id: string; nome: string } | null>(null);
   const [nome, setNome] = useState("");
   const [descricao, setDescricao] = useState("");
   const [recorrencia, setRecorrencia] = useState<Recorrencia>("mensal");
@@ -207,12 +209,7 @@ function TiposPage() {
                           <Pencil className="size-4" />
                         </button>
                         <button
-                          onClick={() => {
-                            if (confirm(`Remover "${t.nome}"?`)) {
-                              if (editId === t.id) reset();
-                              removeTipo(t.id);
-                            }
-                          }}
+                          onClick={() => setDeleteTipoAlvo(t)}
                           className="text-muted-foreground hover:text-destructive"
                           title="Excluir"
                         >
@@ -227,6 +224,19 @@ function TiposPage() {
           </table>
         </div>
       </div>
+
+      {deleteTipoAlvo && (
+        <ConfirmModal
+          title="Remover tipo de documento"
+          message={`Tem certeza que deseja remover "${deleteTipoAlvo.nome}"? Isso removerá o documento de todas as empresas.`}
+          confirmLabel="Remover"
+          onConfirm={() => {
+            if (editId === deleteTipoAlvo.id) reset();
+            removeTipo(deleteTipoAlvo.id);
+          }}
+          onClose={() => setDeleteTipoAlvo(null)}
+        />
+      )}
     </AppLayout>
   );
 }

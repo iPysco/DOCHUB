@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Plus, Trash2 } from "lucide-react";
 import { AppLayout, PageHeader } from "@/components/AppLayout";
+import { ConfirmModal } from "@/components/ConfirmModal";
 import { useStore } from "@/lib/store";
 
 export const Route = createFileRoute("/analistas")({
@@ -15,6 +16,7 @@ function AnalistasPage() {
   const addAnalista = useStore((s) => s.addAnalista);
   const removeAnalista = useStore((s) => s.removeAnalista);
   const [nome, setNome] = useState("");
+  const [deleteAnalista, setDeleteAnalista] = useState<{ id: string; nome: string } | null>(null);
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -75,7 +77,7 @@ function AnalistasPage() {
                               alert("Reatribua as empresas antes de remover.");
                               return;
                             }
-                            if (confirm(`Remover ${a.nome}?`)) removeAnalista(a.id);
+                            setDeleteAnalista(a);
                           }}
                           className="text-muted-foreground hover:text-destructive"
                         >
@@ -90,6 +92,16 @@ function AnalistasPage() {
           </table>
         </div>
       </div>
+
+      {deleteAnalista && (
+        <ConfirmModal
+          title="Remover analista"
+          message={`Tem certeza que deseja remover "${deleteAnalista.nome}"?`}
+          confirmLabel="Remover"
+          onConfirm={() => removeAnalista(deleteAnalista.id)}
+          onClose={() => setDeleteAnalista(null)}
+        />
+      )}
     </AppLayout>
   );
 }

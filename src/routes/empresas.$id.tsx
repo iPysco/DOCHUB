@@ -11,6 +11,7 @@ import {
   X,
 } from "lucide-react";
 import { AppLayout, PageHeader } from "@/components/AppLayout";
+import { ConfirmModal } from "@/components/ConfirmModal";
 import { EmpresaModal } from "@/components/EmpresaModal";
 import { AnexoModal } from "@/components/AnexoModal";
 import { useStore } from "@/lib/store";
@@ -61,6 +62,7 @@ function EmpresaDetail() {
   const [ano, setAno] = useState(inicio.ano);
   const [mes, setMes] = useState(inicio.mes);
   const [editOpen, setEditOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
   const [cobrancaOpen, setCobrancaOpen] = useState(false);
   const [bloqToast, setBloqToast] = useState(false);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -206,12 +208,7 @@ function EmpresaDetail() {
               <Pencil className="size-4" /> Editar
             </button>
             <button
-              onClick={() => {
-                if (confirm(`Remover empresa ${empresa.nome}?`)) {
-                  removeEmpresa(empresa.id);
-                  history.back();
-                }
-              }}
+              onClick={() => setDeleteOpen(true)}
               className="inline-flex items-center gap-1.5 px-3 py-2 rounded-md border border-input text-sm text-destructive hover:bg-destructive/10"
             >
               <Trash2 className="size-4" />
@@ -490,6 +487,16 @@ function EmpresaDetail() {
             </div>
           </div>
         </div>
+      )}
+
+      {deleteOpen && (
+        <ConfirmModal
+          title="Excluir empresa"
+          message={`Tem certeza que deseja excluir "${empresa.nome}"? Esta ação não pode ser desfeita.`}
+          confirmLabel="Excluir"
+          onConfirm={() => { removeEmpresa(empresa.id); history.back(); }}
+          onClose={() => setDeleteOpen(false)}
+        />
       )}
     </AppLayout>
   );
