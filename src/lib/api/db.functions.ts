@@ -119,7 +119,7 @@ export const fetchAll = createServerFn({ method: "GET" }).handler(async () => {
     ) as Row[];
     const tipoIds = (empTiposRows ?? [])
       .filter((et) => (et as Row).empresa_id === (r as Row).id)
-      .map((et) => (et as Row).tipo_documento_id as string)
+      .map((et) => (et as Row).tipo_id as string)
       .filter((id): id is string => typeof id === "string");
     return mapEmpresa(r as Row, contatos, tipoIds);
   });
@@ -238,7 +238,7 @@ export const upsertEmpresa = createServerFn({ method: "POST" })
       const { error: e3 } = await sb.from("empresa_tipos_documento").insert(
         data.tiposDocumentoIds.map((tid) => ({
           empresa_id: data.id,
-          tipo_documento_id: tid,
+          tipo_id: tid,
         })),
       );
       if (e3) throw new Error(e3.message);
