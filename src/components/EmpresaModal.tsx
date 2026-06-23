@@ -38,6 +38,14 @@ export function EmpresaModal({
 }) {
   const isEdit = !!initial;
   const [nome, setNome] = useState(initial?.nome ?? "");
+  const formatCnpj = (v: string) => {
+    const d = v.replace(/\D/g, "").slice(0, 14);
+    return d
+      .replace(/^(\d{2})(\d)/, "$1.$2")
+      .replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3")
+      .replace(/\.(\d{3})(\d)/, ".$1/$2")
+      .replace(/(\d{4})(\d)/, "$1-$2");
+  };
   const [cnpj, setCnpj] = useState(initial?.cnpj ?? "");
   const [analistaId, setAnalistaId] = useState(
     initial?.analistaId ?? analistas[0]?.id ?? "",
@@ -113,9 +121,9 @@ export function EmpresaModal({
             <Field label={`CNPJ${isEdit ? " (fixo)" : ""}`}>
               <input
                 value={cnpj}
-                onChange={(e) => setCnpj(e.target.value)}
+                onChange={(e) => setCnpj(formatCnpj(e.target.value))}
                 placeholder="00.000.000/0000-00"
-                maxLength={20}
+                maxLength={18}
                 required
                 disabled={isEdit}
                 className="input disabled:opacity-60 disabled:cursor-not-allowed"
