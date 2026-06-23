@@ -38,7 +38,13 @@ export function EmpresaModal({
 }) {
   const isEdit = !!initial;
   const [nome, setNome] = useState(initial?.nome ?? "");
-  const formatCnpj = (v: string) => {
+  const formatTelefone = (v: string) => {
+    const d = v.replace(/\D/g, "").slice(0, 11);
+    if (d.length <= 10)
+      return d.replace(/^(\d{2})(\d{4})(\d{0,4})/, "($1) $2-$3").replace(/-$/, "");
+    return d.replace(/^(\d{2})(\d{5})(\d{0,4})/, "($1) $2-$3").replace(/-$/, "");
+  };
+  const [cnpj, setCnpj] = useState(initial?.cnpj ?? "");
     const d = v.replace(/\D/g, "").slice(0, 14);
     return d
       .replace(/^(\d{2})(\d)/, "$1.$2")
@@ -230,10 +236,10 @@ export function EmpresaModal({
                   <input
                     value={c.telefone}
                     onChange={(e) =>
-                      updateContato(idx, { telefone: e.target.value })
+                      updateContato(idx, { telefone: formatTelefone(e.target.value) })
                     }
-                    placeholder="Telefone"
-                    maxLength={20}
+                    placeholder="(xx) xxxxx-xxxx"
+                    maxLength={15}
                     className="input"
                   />
                   <input
