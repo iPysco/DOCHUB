@@ -24,7 +24,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen flex bg-background">
       <aside className="w-64 shrink-0 border-r border-sidebar-border bg-sidebar flex flex-col">
-        <div className="px-6 py-6 border-b border-sidebar-border">
+        <div className="px-6 py-6 border-b border-sidebar-border h-[73px] flex items-center">
           <div className="flex items-center gap-2">
             <div className="size-9 rounded-lg bg-primary text-primary-foreground grid place-items-center font-bold">
               C
@@ -92,7 +92,7 @@ export function PageHeader({
 }) {
   return (
     <div className="border-b border-border bg-card">
-      <div className="px-8 py-6 flex items-center justify-between gap-4">
+      <div className="px-8 flex items-center justify-between gap-4 h-[73px]">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
           {description && (
