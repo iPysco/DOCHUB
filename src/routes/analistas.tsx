@@ -17,6 +17,7 @@ function AnalistasPage() {
   const removeAnalista = useStore((s) => s.removeAnalista);
   const [nome, setNome] = useState("");
   const [deleteAnalista, setDeleteAnalista] = useState<{ id: string; nome: string } | null>(null);
+  const [bloqueadoAnalista, setBloqueadoAnalista] = useState<{ id: string; nome: string } | null>(null);
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -74,7 +75,7 @@ function AnalistasPage() {
                         <button
                           onClick={() => {
                             if (qt > 0) {
-                              alert("Reatribua as empresas antes de remover.");
+                              setBloqueadoAnalista(a);
                               return;
                             }
                             setDeleteAnalista(a);
@@ -96,10 +97,21 @@ function AnalistasPage() {
       {deleteAnalista && (
         <ConfirmModal
           title="Remover analista"
-          message={`Tem certeza que deseja remover "${deleteAnalista.nome}"?`}
+          message={`Tem certeza que deseja remover "${deleteAnalista.nome}" como Analista?`}
           confirmLabel="Remover"
           onConfirm={() => removeAnalista(deleteAnalista.id)}
           onClose={() => setDeleteAnalista(null)}
+        />
+      )}
+
+      {bloqueadoAnalista && (
+        <ConfirmModal
+          title="Ação bloqueada"
+          message={`O analista "${bloqueadoAnalista.nome}" ainda possui empresas atribuídas.\n\nReatribua as empresas antes de remover.`}
+          confirmLabel="Entendi"
+          danger={false}
+          onConfirm={() => setBloqueadoAnalista(null)}
+          onClose={() => setBloqueadoAnalista(null)}
         />
       )}
     </AppLayout>
