@@ -68,12 +68,12 @@ function mapDocStatus(r: Row, anexo: Row | undefined): DocumentoStatus {
     validadoEm: (r.validado_em as string) ?? undefined,
     anexo: anexo
       ? {
-          nome: anexo.nome as string,
-          dataUrl: anexo.data_url as string,
-          tamanho: anexo.tamanho as number,
-          tipo: anexo.tipo as string,
-          enviadoEm: anexo.enviado_em as string,
-        }
+        nome: anexo.nome as string,
+        dataUrl: anexo.data_url as string,
+        tamanho: anexo.tamanho as number,
+        tipo: anexo.tipo as string,
+        enviadoEm: anexo.enviado_em as string,
+      }
       : undefined,
   };
 }
@@ -119,7 +119,8 @@ export const fetchAll = createServerFn({ method: "GET" }).handler(async () => {
     ) as Row[];
     const tipoIds = (empTiposRows ?? [])
       .filter((et) => (et as Row).empresa_id === (r as Row).id)
-      .map((et) => (et as Row).tipo_documento_id as string);
+      .map((et) => (et as Row).tipo_documento_id as string)
+      .filter((id): id is string => typeof id === "string");
     return mapEmpresa(r as Row, contatos, tipoIds);
   });
 
