@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useRef, useState } from "react";
-import { Pencil, Plus, Search, Upload } from "lucide-react";
+import { Pencil, Plus, Search, Trash2, Upload } from "lucide-react";
 import { AppLayout, PageHeader } from "@/components/AppLayout";
 import { EmpresaModal } from "@/components/EmpresaModal";
 import { useStore } from "@/lib/store";
@@ -17,6 +17,7 @@ function EmpresasList() {
   const tipos = useStore((s) => s.tipos);
   const addEmpresa = useStore((s) => s.addEmpresa);
   const updateEmpresa = useStore((s) => s.updateEmpresa);
+  const removeEmpresa = useStore((s) => s.removeEmpresa);
   const filtroId = useStore((s) => s.analistaFiltroId);
   const fileRef = useRef<HTMLInputElement>(null);
   const [importMsg, setImportMsg] = useState<string | null>(null);
@@ -242,13 +243,24 @@ function EmpresasList() {
                         {e.tiposDocumentoIds.length}
                       </td>
                       <td className="px-4 py-3">
-                        <button
-                          onClick={() => setEditEmpresa(e)}
-                          className="text-muted-foreground hover:text-foreground"
-                          title="Editar empresa"
-                        >
-                          <Pencil className="size-4" />
-                        </button>
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => setEditEmpresa(e)}
+                            className="text-muted-foreground hover:text-foreground"
+                            title="Editar empresa"
+                          >
+                            <Pencil className="size-4" />
+                          </button>
+                          <button
+                            onClick={() => {
+                              if (confirm(`Excluir "${e.nome}"?`)) removeEmpresa(e.id);
+                            }}
+                            className="text-muted-foreground hover:text-destructive"
+                            title="Excluir empresa"
+                          >
+                            <Trash2 className="size-4" />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   );
