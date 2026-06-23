@@ -181,7 +181,7 @@ export function AnexoModal({
                     type="file"
                     onChange={onFile}
                     className="hidden"
-                    accept=".pdf,.png,.jpg,.jpeg,.doc,.docx,.xls,.xlsx,.zip"
+                    accept=".pdf,.ofx,.csv,.xls,.xlsx"
                   />
                 </label>
               </div>
