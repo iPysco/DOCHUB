@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useRef, useState } from "react";
-import { Plus, Search, Upload } from "lucide-react";
+import { Pencil, Plus, Search, Upload } from "lucide-react";
 import { AppLayout, PageHeader } from "@/components/AppLayout";
 import { EmpresaModal } from "@/components/EmpresaModal";
 import { useStore } from "@/lib/store";
@@ -16,11 +16,13 @@ function EmpresasList() {
   const analistas = useStore((s) => s.analistas);
   const tipos = useStore((s) => s.tipos);
   const addEmpresa = useStore((s) => s.addEmpresa);
+  const updateEmpresa = useStore((s) => s.updateEmpresa);
   const filtroId = useStore((s) => s.analistaFiltroId);
   const fileRef = useRef<HTMLInputElement>(null);
   const [importMsg, setImportMsg] = useState<string | null>(null);
 
   const [open, setOpen] = useState(false);
+  const [editEmpresa, setEditEmpresa] = useState<typeof empresas[0] | null>(null);
   const [q, setQ] = useState("");
 
   const handleCsv = async (file: File) => {
@@ -195,6 +197,7 @@ function EmpresasList() {
                 <th className="px-4 py-3">Class.</th>
                 <th className="px-4 py-3">Canal</th>
                 <th className="px-4 py-3">Docs</th>
+                <th className="px-4 py-3"></th>
               </tr>
             </thead>
             <tbody>
@@ -238,6 +241,15 @@ function EmpresasList() {
                       <td className="px-4 py-3 text-muted-foreground">
                         {e.tiposDocumentoIds.length}
                       </td>
+                      <td className="px-4 py-3">
+                        <button
+                          onClick={() => setEditEmpresa(e)}
+                          className="text-muted-foreground hover:text-foreground"
+                          title="Editar empresa"
+                        >
+                          <Pencil className="size-4" />
+                        </button>
+                      </td>
                     </tr>
                   );
                 })
@@ -253,6 +265,20 @@ function EmpresasList() {
           onSave={(data) => {
             addEmpresa(data);
             setOpen(false);
+          }}
+          analistas={analistas}
+          tipos={tipos}
+        />
+      )}
+
+      {editEmpresa && (
+        <EmpresaModal
+          initial={editEmpresa}
+          onClose={() => setEditEmpresa(null)}
+          onSave={(data) => {
+            const { cnpj: _cnpj, ...rest } = data;
+            updateEmpresa(editEmpresa.id, rest);
+            setEditEmpresa(null);
           }}
           analistas={analistas}
           tipos={tipos}
