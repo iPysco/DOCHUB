@@ -78,7 +78,7 @@ export const useStore = create<State>()((set, get) => ({
     const id = uid();
     const novo = { ...t, id };
     set((s) => ({ tipos: [...s.tipos, novo] }));
-    upsertTipo({ id, nome: t.nome, descricao: t.descricao, recorrencia: t.recorrencia, diaLimite: t.diaLimite }).catch(console.error);
+    upsertTipo({ data: { id, nome: t.nome, descricao: t.descricao, recorrencia: t.recorrencia, diaLimite: t.diaLimite } }).catch(console.error);
   },
 
   updateTipo: (id, t) => {
@@ -86,7 +86,7 @@ export const useStore = create<State>()((set, get) => ({
       tipos: s.tipos.map((x) => (x.id === id ? { ...x, ...t } : x)),
     }));
     const updated = get().tipos.find((x) => x.id === id);
-    if (updated) upsertTipo({ id, nome: updated.nome, descricao: updated.descricao, recorrencia: updated.recorrencia, diaLimite: updated.diaLimite }).catch(console.error);
+    if (updated) upsertTipo({ data: { id, nome: updated.nome, descricao: updated.descricao, recorrencia: updated.recorrencia, diaLimite: updated.diaLimite } }).catch(console.error);
   },
 
   removeTipo: (id) => {
@@ -98,7 +98,7 @@ export const useStore = create<State>()((set, get) => ({
       })),
       documentos: s.documentos.filter((d) => d.tipoId !== id),
     }));
-    deleteTipo({ id }).catch(console.error);
+    deleteTipo({ data: { id } }).catch(console.error);
   },
 
   // ── Analistas ──────────────────────────────────────────────────────────────
@@ -106,12 +106,12 @@ export const useStore = create<State>()((set, get) => ({
   addAnalista: (nome) => {
     const id = uid();
     set((s) => ({ analistas: [...s.analistas, { id, nome }] }));
-    insertAnalista({ id, nome }).catch(console.error);
+    insertAnalista({ data: { id, nome } }).catch(console.error);
   },
 
   removeAnalista: (id) => {
     set((s) => ({ analistas: s.analistas.filter((a) => a.id !== id) }));
-    deleteAnalista({ id }).catch(console.error);
+    deleteAnalista({ data: { id } }).catch(console.error);
   },
 
   // ── Empresas ───────────────────────────────────────────────────────────────
@@ -120,7 +120,7 @@ export const useStore = create<State>()((set, get) => ({
     const id = uid();
     const nova: Empresa = { ...e, id, contatos: e.contatos ?? [] };
     set((s) => ({ empresas: [...s.empresas, nova] }));
-    upsertEmpresa({ id, nome: nova.nome, cnpj: nova.cnpj, analistaId: nova.analistaId, classificacao: nova.classificacao, canal: nova.canal, observacoes: nova.observacoes, clienteDesde: nova.clienteDesde, contatos: nova.contatos, tiposDocumentoIds: nova.tiposDocumentoIds }).catch(console.error);
+    upsertEmpresa({ data: { id, nome: nova.nome, cnpj: nova.cnpj, analistaId: nova.analistaId, classificacao: nova.classificacao, canal: nova.canal, observacoes: nova.observacoes, clienteDesde: nova.clienteDesde, contatos: nova.contatos, tiposDocumentoIds: nova.tiposDocumentoIds } }).catch(console.error);
   },
 
   updateEmpresa: (id, e) => {
@@ -128,7 +128,7 @@ export const useStore = create<State>()((set, get) => ({
       empresas: s.empresas.map((x) => (x.id === id ? { ...x, ...e } : x)),
     }));
     const updated = get().empresas.find((x) => x.id === id);
-    if (updated) upsertEmpresa({ id, nome: updated.nome, cnpj: updated.cnpj, analistaId: updated.analistaId, classificacao: updated.classificacao, canal: updated.canal, observacoes: updated.observacoes, clienteDesde: updated.clienteDesde, contatos: updated.contatos, tiposDocumentoIds: updated.tiposDocumentoIds }).catch(console.error);
+    if (updated) upsertEmpresa({ data: { id, nome: updated.nome, cnpj: updated.cnpj, analistaId: updated.analistaId, classificacao: updated.classificacao, canal: updated.canal, observacoes: updated.observacoes, clienteDesde: updated.clienteDesde, contatos: updated.contatos, tiposDocumentoIds: updated.tiposDocumentoIds } }).catch(console.error);
   },
 
   removeEmpresa: (id) => {
@@ -136,7 +136,7 @@ export const useStore = create<State>()((set, get) => ({
       empresas: s.empresas.filter((e) => e.id !== id),
       documentos: s.documentos.filter((d) => d.empresaId !== id),
     }));
-    deleteEmpresa({ id }).catch(console.error);
+    deleteEmpresa({ data: { id } }).catch(console.error);
   },
 
   // ── Documentos ─────────────────────────────────────────────────────────────
@@ -153,7 +153,7 @@ export const useStore = create<State>()((set, get) => ({
       const documentos = existing
         ? s.documentos.map((d) => (d.id === id ? next : d))
         : [...s.documentos, next];
-      upsertDocStatus({ id: next.id, empresaId: next.empresaId, tipoId: next.tipoId, periodo: next.periodo, status: next.status, dataLimite: next.dataLimite, observacao: next.observacao, justificativa: next.justificativa, recebidoEm: next.recebidoEm, dispensadoEm: next.dispensadoEm, anexo: next.anexo }).catch(console.error);
+      upsertDocStatus({ data: { id: next.id, empresaId: next.empresaId, tipoId: next.tipoId, periodo: next.periodo, status: next.status, dataLimite: next.dataLimite, observacao: next.observacao, justificativa: next.justificativa, recebidoEm: next.recebidoEm, dispensadoEm: next.dispensadoEm, anexo: next.anexo } }).catch(console.error);
       return { documentos };
     });
   },
@@ -178,7 +178,7 @@ export const useStore = create<State>()((set, get) => ({
       const documentos = existing
         ? s.documentos.map((d) => (d.id === id ? next : d))
         : [...s.documentos, next];
-      upsertDocStatus({ id: next.id, empresaId: next.empresaId, tipoId: next.tipoId, periodo: next.periodo, status: next.status, dataLimite: next.dataLimite, observacao: next.observacao, justificativa: next.justificativa, recebidoEm: next.recebidoEm, dispensadoEm: next.dispensadoEm, anexo: next.anexo }).catch(console.error);
+      upsertDocStatus({ data: { id: next.id, empresaId: next.empresaId, tipoId: next.tipoId, periodo: next.periodo, status: next.status, dataLimite: next.dataLimite, observacao: next.observacao, justificativa: next.justificativa, recebidoEm: next.recebidoEm, dispensadoEm: next.dispensadoEm, anexo: next.anexo } }).catch(console.error);
       return { documentos };
     });
   },
