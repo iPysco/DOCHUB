@@ -24,7 +24,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen flex bg-background">
       <aside className="w-64 shrink-0 border-r border-sidebar-border bg-sidebar flex flex-col">
-        <div className="px-6 py-6 border-b border-sidebar-border h-[73px] flex items-center">
+        <div className="px-6 py-6 border-b border-sidebar-border h-[74px] flex items-center">
           <div className="flex items-center gap-2">
             <div className="size-9 rounded-lg bg-primary text-primary-foreground grid place-items-center font-bold">
               C
